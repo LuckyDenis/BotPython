@@ -25,3 +25,24 @@ class MD5Hash:
 
         return hmac.new(self._login, new_hash, hashlib.md5).hexdigest()
 
+
+class MPPC:
+    def __init__(self):
+        self._dec_history = bytearray().append(0xffff)
+        self._srcbinary = bytearray()
+
+    def pack(self, src):
+        outputbits = bytearray([i for i in range((src.Length * 9) + 11)])
+        arr2 = bytearray(src)
+        self.re_order_bit_array(arr2)
+
+    def copy(self,  inputbits, outputbits, to, frm, length):
+        for i in range(0, length):
+            outputbits[to + i] = inputbits[frm + i]
+
+    def re_order_bit_array(self, src):
+        for i in range(0, len(src), 8):
+            for j in range(0, 4):
+                flag = src[i + j]
+                src[i + j] = src[i + (j - 7)]
+                src[i + (7 - j)] = flag
